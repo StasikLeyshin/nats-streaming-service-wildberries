@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  wb-app:
+    container_name: wb-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - nats-streaming
+
+  db:
+    image: postgres:15.4
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: "user"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "uQ6B0ea5Fm"
+    ports:
+      - "3306:3306"
+
+  nats-streaming:
+    image: nats-streaming:0.25.5-alpine3.18
+    container_name: nats-streaming
+    restart: always
+    command: "--cluster_id NATS"
+    ports:
+      - "4222:4222"
