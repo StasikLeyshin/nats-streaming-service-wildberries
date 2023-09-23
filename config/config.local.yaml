@@ -1,0 +1,18 @@
+database:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "admin"
+  db_name: "payments"
+
+
+nats_streaming:
+  host: "localhost"
+  port: 4222
+  cluster_id: "NATS"
+  client_id: "sub-1"
+  channel: "channel"
+
+
+http:
+  port: 5000
