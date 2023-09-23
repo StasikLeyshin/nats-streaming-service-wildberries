@@ -7,4 +7,4 @@ COPY go.sum ./
 RUN go mod download
 
 COPY . ./
-RUN go build ./cmd/http
+RUN go build ./cmd/wb_app

@@ -12,14 +12,22 @@ services:
       - db
       - nats-streaming
 
+  auto_publish_channel:
+    container_name: auto_publish_channel
+    build:
+      context: ./
+      dockerfile: Dockerfile.auto-publish-channel
+    depends_on:
+      - nats-streaming
+
   db:
     image: postgres:15.4
     container_name: postgres
     restart: always
     environment:
       POSTGRES_DB: "user"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "uQ6B0ea5Fm"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
     ports:
       - "3306:3306"
 
