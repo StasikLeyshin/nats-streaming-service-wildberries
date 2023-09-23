@@ -15,7 +15,6 @@ type DatabaseConfig struct {
 }
 
 func DatabaseConnect(config DatabaseConfig) (*gorm.DB, error) {
-	//dbURL := "postgres://pg:pass@localhost:5432/crud"
 	dsn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s",
 		config.Host, config.Port, config.User, config.DBName, config.Password)
 
@@ -24,34 +23,5 @@ func DatabaseConnect(config DatabaseConfig) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	//err = driver.DB().Ping()
-
-	//sqlDB, _ := db.DB()
-	//
-	//err = sqlDB.Close()
-	//if err != nil {
-	//	return nil, err
-	//}
-
-	//if err != nil {
-	//	return nil, err
-	//}
 	return db, nil
 }
-
-//func DatabaseConnect(config DatabaseConfig) (*ent.Client, error) {
-//	dsn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=%s",
-//		config.Host, config.Port, config.User, config.DBName, config.Password, config.SslMode)
-//	driver, err := sql.Open(dialect.Postgres, dsn)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	err = driver.DB().Ping()
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	return ent.NewClient(ent.Driver(driver)), nil
-//}
