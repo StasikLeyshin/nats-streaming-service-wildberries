@@ -34,7 +34,7 @@
 ```
 git clone https://github.com/StasikLeyshin/nats-streaming-service-wildberries.git
 ```
-2. Разверните приложение в docker-compose:
+2. Разверните приложение в docker:
 ```
 docker-compose up -d --build
 ```
