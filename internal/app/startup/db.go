@@ -15,9 +15,9 @@ type DatabaseConfig struct {
 }
 
 func DatabaseConnect(config DatabaseConfig) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s",
-		config.Host, config.Port, config.User, config.DBName, config.Password)
 
+	dsn := fmt.Sprintf("postgres://%s:%s@postgres/%s?sslmode=disable",
+		config.User, config.Password, config.DBName)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {

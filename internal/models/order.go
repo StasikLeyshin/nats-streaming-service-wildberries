@@ -1,15 +1,18 @@
 package models
 
-import "time"
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"time"
+)
 
 type Order struct {
-	OrderUid    string `json:"order_uid"`
-	TrackNumber string `json:"track_number"`
-	Entry       string `json:"entry"`
-
-	Delivery          Delivery  `json:"delivery"  `
-	Payment           Payment   `json:"payment"`
-	Items             Item      `json:"items"`
+	OrderUid          string    `json:"order_uid" gorm:"primaryKey"`
+	TrackNumber       string    `json:"track_number"`
+	Entry             string    `json:"entry"`
+	Delivery          Delivery  `json:"delivery" serializer:"json"`
+	Payment           Payment   `json:"payment" serializer:"json"`
+	Items             Items     `json:"items" serializer:"json"`
 	Locale            string    `json:"locale"`
 	InternalSignature string    `json:"internal_signature"`
 	CustomerID        string    `json:"customer_id"`
@@ -30,6 +33,14 @@ type Delivery struct {
 	Email   string `json:"email"`
 }
 
+func (d *Delivery) Scan(value interface{}) error {
+	return json.Unmarshal(value.([]byte), &d)
+}
+
+func (d Delivery) Value() (driver.Value, error) {
+	return json.Marshal(d)
+}
+
 type Payment struct {
 	Transaction  string `json:"transaction"`
 	RequestID    string `json:"request_id"`
@@ -41,6 +52,14 @@ type Payment struct {
 	DeliveryCost int    `json:"delivery_cost"`
 	GoodsTotal   int    `json:"goods_total"`
 	CustomFee    int    `json:"custom_fee"`
+}
+
+func (p *Payment) Scan(value interface{}) error {
+	return json.Unmarshal(value.([]byte), &p)
+}
+
+func (p Payment) Value() (driver.Value, error) {
+	return json.Marshal(p)
 }
 
 type Item struct {
@@ -55,4 +74,22 @@ type Item struct {
 	NmID        int    `json:"nm_id"`
 	Brand       string `json:"brand"`
 	Status      int    `json:"status"`
+}
+
+func (i *Item) Scan(value interface{}) error {
+	return json.Unmarshal(value.([]byte), &i)
+}
+
+func (i Item) Value() (driver.Value, error) {
+	return json.Marshal(i)
+}
+
+type Items []Item
+
+func (i *Items) Scan(value interface{}) error {
+	return json.Unmarshal(value.([]byte), &i)
+}
+
+func (i Items) Value() (driver.Value, error) {
+	return json.Marshal(i)
 }

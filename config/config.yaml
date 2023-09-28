@@ -1,13 +1,13 @@
 database:
   host: "postgres"
   port: 3306
-  user: "postgres"
-  password: "postgres"
+  user: "postgres_user"
+  password: "postgres_pass"
   db_name: "payments"
 
 
 nats_streaming:
-  host: "localhost"
+  host: "nats://nats-streaming"
   port: 4222
   cluster_id: "NATS"
   client_id: "sub-1"

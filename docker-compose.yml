@@ -1,13 +1,41 @@
 version: '3'
 
 services:
+  db:
+    image: postgres:15.4
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: "payments"
+      POSTGRES_USER: "postgres_user"
+      POSTGRES_PASSWORD: "postgres_pass"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "3306:5432"
+
+  nats-streaming:
+    image: nats-streaming:0.25.5-alpine3.18
+    container_name: nats-streaming
+    restart: always
+    command: "--cluster_id NATS"
+    ports:
+      - "4222:4222"
+
   wb-app:
     container_name: wb-app
     build:
       context: ./
       dockerfile: Dockerfile
+    restart: always
+    environment:
+      CONFIG_PATH: "./config/config.yaml"
+    volumes:
+      - ./config/config.yaml:/app/config.yaml
+      - ./cmd/wb_app:/app/cmd/wb_app
+    command: go run cmd/wb_app/main.go
     ports:
-      - "8000:8000"
+      - "8000:5000"
     depends_on:
       - db
       - nats-streaming
@@ -17,24 +45,12 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.auto-publish-channel
-    depends_on:
-      - nats-streaming
-
-  db:
-    image: postgres:15.4
-    container_name: postgres
     restart: always
     environment:
-      POSTGRES_DB: "user"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-    ports:
-      - "3306:3306"
-
-  nats-streaming:
-    image: nats-streaming:0.25.5-alpine3.18
-    container_name: nats-streaming
-    restart: always
-    command: "--cluster_id NATS"
-    ports:
-      - "4222:4222"
+      CONFIG_PATH: "./config/config.auto.publish.channel.yaml"
+    volumes:
+      - ./config/config.auto.publish.channel.yaml:/app/config.auto.publish.channel.yaml
+      - ./cmd/auto_publish_channel:/app/cmd/auto_publish_channel
+    command: go run cmd/auto_publish_channel/main.go
+    depends_on:
+      - nats-streaming

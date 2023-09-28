@@ -1,0 +1,6 @@
+nats_streaming:
+  host: "localhost"
+  port: 53616
+  cluster_id: "NATS"
+  client_id: "sub-2"
+  channel: "channel"
