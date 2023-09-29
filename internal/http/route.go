@@ -50,8 +50,7 @@ func GetOrder(httpRouter *HttpRouter) http.HandlerFunc {
 		if err != nil {
 			resp := make(map[string]string)
 			resp["error"] = "order not found"
-			jsonError, _ := json.Marshal(resp)
-			err = json.NewEncoder(w).Encode(jsonError)
+			err = json.NewEncoder(w).Encode(resp)
 			if err != nil {
 				http.NotFound(w, r)
 				log.Printf("error json Encode: %v", err)
